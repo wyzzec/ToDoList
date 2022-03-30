@@ -3,7 +3,9 @@
 This app is the result of learning from the tutorial:
 https://www.udemy.com/course/curso-completo-flutter-app-android-ios/
 
-(beta version)
+version 1.0: initial commit
+version 1.1: "Clear all" button now is working
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.

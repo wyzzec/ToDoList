@@ -54,10 +54,7 @@ class _ToDoListHomePageState extends State<ToDoListHomePage> {
                     onPressed: () {
                       String todo = todoController.text;
                       setState(() {
-                        ToDo newTodo = ToDo(
-                            todo: todo,
-                            date: DateTime.now()
-                        );
+                        ToDo newTodo = ToDo(todo: todo, date: DateTime.now());
                         todos.add(newTodo);
                         todoController.clear();
                       });
@@ -100,7 +97,11 @@ class _ToDoListHomePageState extends State<ToDoListHomePage> {
                     width: 12,
                   ),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        todos.clear();
+                      });
+                    },
                     child: Text('Clear all'),
                   ),
                 ],

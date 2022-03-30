@@ -20,7 +20,7 @@ class ToDoBoxList extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              DateFormat('dd/MM/yyyy h:m:s aaa').format(date),
+              DateFormat('dd/MM/yyyy - h:m:s aaa').format(date),
               style: TextStyle(
                 fontSize: 10,
               ),
