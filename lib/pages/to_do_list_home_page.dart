@@ -10,9 +10,9 @@ class ToDoListHomePage extends StatefulWidget {
 }
 
 class _ToDoListHomePageState extends State<ToDoListHomePage> {
-  List<ToDo> todos = [];
+  List<ToDo> toDos = [];
 
-  final TextEditingController todoController = TextEditingController();
+  final TextEditingController toDoController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class _ToDoListHomePageState extends State<ToDoListHomePage> {
                 children: [
                   Expanded(
                     child: TextField(
-                      controller: todoController,
+                      controller: toDoController,
                       decoration: const InputDecoration(
                         labelText: 'Add a task',
                         hintText: 'Ex: studying Flutter',
@@ -52,11 +52,11 @@ class _ToDoListHomePageState extends State<ToDoListHomePage> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      String todo = todoController.text;
+                      String toDo = toDoController.text;
                       setState(() {
-                        ToDo newTodo = ToDo(todo: todo, date: DateTime.now());
-                        todos.add(newTodo);
-                        todoController.clear();
+                        ToDo newTodo = ToDo(toDo: toDo, date: DateTime.now());
+                        toDos.add(newTodo);
+                        toDoController.clear();
                       });
                     },
                     child: const Icon(
@@ -75,10 +75,10 @@ class _ToDoListHomePageState extends State<ToDoListHomePage> {
               child: ListView(
                 shrinkWrap: true,
                 children: [
-                  for (ToDo todo in todos)
+                  for (ToDo toDo in toDos)
                     ToDoBoxList(
-                      todo: todo.todo,
-                      date: todo.date,
+                      toDo: toDo,
+                      onDelete: onDelete,
                     ),
                 ],
               ),
@@ -89,20 +89,20 @@ class _ToDoListHomePageState extends State<ToDoListHomePage> {
                 children: [
                   Expanded(
                     child: Text(
-                      '${todos.length} tasks to do',
-                      style: TextStyle(),
+                      '${toDos.length} tasks to do',
+                      style: const TextStyle(),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 12,
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      setState(() {
-                        todos.clear();
-                      });
+                      List<ToDo> undoListToDosSaver;
+                      undoListToDosSaver = toDos;
+                      deleteAllToDosConfirmationDialog();
                     },
-                    child: Text('Clear all'),
+                    child: const Text('Clear all'),
                   ),
                 ],
               ),
@@ -112,6 +112,65 @@ class _ToDoListHomePageState extends State<ToDoListHomePage> {
       ),
     );
   }
-}
 
-void login() {}
+  void onDelete(ToDo toDo) {
+    final ToDo undoSaver = toDo;
+    final int undoSaverPos = toDos.indexOf(toDo);
+    setState(() {
+      toDos.remove(toDo);
+    });
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          '${toDo.toDo} has been removed.',
+          style: const TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: Colors.black87,
+        action: SnackBarAction(
+          label: 'Undo',
+          textColor: Colors.blue,
+          onPressed: () {
+            setState(() {
+              toDos.insert(undoSaverPos, undoSaver);
+            });
+          },
+        ),
+      ),
+    );
+  }
+  void deleteAllToDos(){
+    setState(() {
+      toDos.clear();
+    });
+  }
+
+
+  void deleteAllToDosConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Clear all'),
+        content: const Text('Are you sure?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              deleteAllToDos();
+            },
+            style: TextButton.styleFrom(primary: Colors.red),
+            child: const Text('Clear'),
+          ),
+        ],
+      ),
+    );
+  }
+}

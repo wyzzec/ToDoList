@@ -1,5 +1,5 @@
 class ToDo{
-  ToDo({required this.todo, required this.date});
-  String todo;
+  ToDo({required this.toDo, required this.date});
+  String toDo;
   DateTime date;
 }
